@@ -1,3 +1,0 @@
-{
-  "/groups/*": "/groups/$1?_embed=items"
-}
