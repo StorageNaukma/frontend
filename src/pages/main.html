@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
+    <title>Storage</title>
+</head>
+<body>
+<div class="container main-container">
+    <nav class="navbar navbar-light mt-5">
+        <h1 class="fw-bold">Склад</h1>
+        <button type="button" class="nav-link" id="stats-btn" data-bs-toggle="modal" data-bs-target="#stats-modal">
+            Статистика
+        </button>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Картопля" aria-label="Search" id="search-input">
+            <button class="btn btn-outline-success" type="submit" data-bs-toggle="modal"
+                    data-bs-target="#search-modal" disabled id="conf-search-btn">Шукати
+            </button>
+        </form>
+    </nav>
+
+    <button class="btn btn-outline-secondary mt-4" type="button" data-bs-toggle="modal"
+            data-bs-target="#add-group-modal">Додати групу
+    </button>
+
+    <div class="row mt-3 align-items-start main-content">
+        <div class="col-2 sticky">
+            <div class="list-group all-groups-list pe-1" id="list-tab" role="tablist">
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="tab-content groups-content" id="nav-tabContent">
+            </div>
+        </div>
+    </div>
+
+    <p class="text-center fs-4 no-groups d-none">У вас поки що немає груп.</p>
+
+</div>
+
+<div class="modal fade" id="item-card-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex align-items-center">
+                    <button class="back-to-search-btn me-3 d-none" id="back-to-search-btn"
+                            data-bs-target="#search-modal" data-bs-toggle="modal"
+                            data-bs-dismiss="modal" data-source="item-card">
+                        <span class="back-icon"></span>
+                    </button>
+                    <h2 class="modal-title fs-4" id="exampleModalLabel">Картка товару</h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body item-card-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-item-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4">Новий товар</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="new-item-name-input" class="col-form-label fw-bold pt-0">Назва</label>
+                        <input type="text" class="form-control" id="new-item-name-input" required
+                               aria-describedby="validationNewItemNameFeedback">
+                        <div id="validationNewItemNameFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-item-descr-input" class="col-form-label fw-bold">Опис</label>
+                        <textarea class="form-control" id="new-item-descr-input" rows="4" required
+                                  aria-describedby="validationNewItemDescrFeedback"></textarea>
+                        <div id="validationNewItemDescrFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-item-manuf-input" class="col-form-label fw-bold">Виробник</label>
+                        <input type="text" class="form-control" id="new-item-manuf-input" required
+                               aria-describedby="validationNewItemManufFeedback">
+                        <div id="validationNewItemManufFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-item-price-input" class="col-form-label fw-bold">Ціна (грн)</label>
+                        <input type="number" class="form-control" id="new-item-price-input" min="1" required
+                               aria-describedby="validationNewItemPriceFeedback">
+                        <div id="validationNewItemPriceFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div>
+                        <label for="new-item-quantity-input" class="col-form-label fw-bold">Кількість</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="new-item-quantity-input"
+                                   min="1" required aria-describedby="validationNewItemQuantityFeedback">
+                            <input type="text" class="form-control" id="new-item-label-input"
+                                   placeholder="кг, шт, л, ..." required
+                                   aria-describedby="validationNewItemLabelFeedback">
+                        </div>
+                        <div id="validationNewItemQuantityFeedback" class="invalid-feedback"></div>
+                        <div id="validationNewItemLabelFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="d-grid gap-2 col-3 mx-auto mt-4">
+                        <button type="submit" class="btn btn-primary" id="create-new-item-btn">Створити</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="add-group-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4">Нова група</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="new-group-name-input" class="col-form-label fw-bold pt-0">Назва</label>
+                        <input type="text" class="form-control" id="new-group-name-input"
+                               aria-describedby="validationNewGroupNameFeedback">
+                        <div id="validationNewGroupNameFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-group-descr-input" class="col-form-label fw-bold">Опис</label>
+                        <textarea class="form-control" id="new-group-descr-input" rows="5"
+                                  aria-describedby="validationNewGroupDescrFeedback"></textarea>
+                        <div id="validationNewGroupDescrFeedback" class="invalid-feedback"></div>
+                    </div>
+                    <div class="d-grid gap-2 col-3 mx-auto mt-4">
+                        <button type="submit" class="btn btn-primary" id="create-new-group-btn">Створити</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-group-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4">Редагування групи</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body edit-group-body"></div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="delete-group-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content delete-group-modal-content"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-item-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content delete-item-modal-content">
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="search-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4 search-modal-title"></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body search-modal-body"></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="stats-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4">Статистика</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body stats-modal-body">
+                <table class="table table-bordered" id="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Група</th>
+                            <th>Товар</th>
+                            <th>Кількість</th>
+                            <th>Ціна</th>
+                            <th>Загальна вартість товару</th>
+                            <th>Загальна вартість по групі</th>
+                            <th>Загальна вартість по всіх групах</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <!--                    <tr>-->
+                    <!--                        <td rowspan="3">Плодоовочеві</td>-->
+                    <!--                        <td>Картопля</td>-->
+                    <!--                        <td>55</td>-->
+                    <!--                        <td>70</td>-->
+                    <!--                        <td>350</td>-->
+                    <!--                        <td rowspan="3">4500</td>-->
+                    <!--                        <td rowspan="6">19895237</td>-->
+                    <!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td>Буряк</td>-->
+                    <!--                        <td>55</td>-->
+                    <!--                        <td>70</td>-->
+                    <!--                        <td>350</td>-->
+                    <!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td>Капуста</td>-->
+                    <!--                        <td>55</td>-->
+                    <!--                        <td>70</td>-->
+                    <!--                        <td>350</td>-->
+                    <!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td rowspan="2">Напої</td>-->
+                    <!--                        <td>Вода</td>-->
+                    <!--                        <td>55</td>-->
+                    <!--                        <td>70</td>-->
+                    <!--                        <td>350</td>-->
+                    <!--                        <td rowspan="2">4500</td>-->
+                    <!--                    </tr>-->
+                    <!--                    <tr>-->
+                    <!--                        <td>Водка</td>-->
+                    <!--                        <td>55</td>-->
+                    <!--                        <td>70</td>-->
+                    <!--                        <td>350</td>-->
+                    <!--                    </tr>-->
+                </table>
+                <p class="fs-4 text-center no-stats d-none">Щоб побачити статистику, створіть хоча б одну групу з одним товаром.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+<script src="../js/main.js"></script>
+</body>
+</html>
